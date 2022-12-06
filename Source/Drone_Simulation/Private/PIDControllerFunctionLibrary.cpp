@@ -3,7 +3,8 @@
 
 #include "PIDControllerFunctionLibrary.h"
 
-float UPIDControllerFunctionLibrary::PIDCalculation(float DeltaTime, float P, float I, float D, float Bias, float CurrentValue, float DesiredValue, UPARAM(ref) float& Integral, UPARAM(ref) float& ErrorPrior)
+float UPIDControllerFunctionLibrary::PIDCalculation(float DeltaTime, float P, float I, float D, float Bias, 
+	float CurrentValue, float DesiredValue, UPARAM(ref) float& Integral, UPARAM(ref) float& ErrorPrior)
 {	
 	float  pError = CurrentValue - DesiredValue;
 	float pDerivative = (pError - ErrorPrior) / DeltaTime;
@@ -18,7 +19,8 @@ float UPIDControllerFunctionLibrary::PIDCalculation(float DeltaTime, float P, fl
 }
 
 
-float UPIDControllerFunctionLibrary::PIDCalculationRotation(float DeltaTime, float P, float I, float D, float Bias, float CurrentValue, float DesiredValue, UPARAM(ref) float& Integral, UPARAM(ref) float& ErrorPrior)
+float UPIDControllerFunctionLibrary::PIDCalculationRotation(float DeltaTime, float P, float I, float D, float Bias, 
+	float CurrentValue, float DesiredValue, UPARAM(ref) float& Integral, UPARAM(ref) float& ErrorPrior)
 {
 	float  pError = DesiredValue - CurrentValue ;
 
