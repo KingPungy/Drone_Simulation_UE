@@ -15,14 +15,14 @@ float UPIDControllerFunctionLibrary::PIDCalculation(float DeltaTime, float P, fl
 	Integral += pError * DeltaTime;
 	ErrorPrior = pError;
 
-	return ((ErrorPrior * P) + (Integral * I) + (pDerivative * D) + Bias);
+	return ((ErrorPrior * P) + (Integral * I) + (pDerivative * D) + Bias) * DeltaTime;
 }
 
 
 float UPIDControllerFunctionLibrary::PIDCalculationRotation(float DeltaTime, float P, float I, float D, float Bias, 
 	float CurrentValue, float DesiredValue, UPARAM(ref) float& Integral, UPARAM(ref) float& ErrorPrior)
 {
-	float  pError = DesiredValue - CurrentValue ;
+	float  pError = DesiredValue - CurrentValue;
 
 	// Unreal Engine Rotation Error correction
 	if (pError > 180) {
@@ -39,5 +39,5 @@ float UPIDControllerFunctionLibrary::PIDCalculationRotation(float DeltaTime, flo
 	Integral += pError * DeltaTime;
 	ErrorPrior = pError;
 
-	return ((ErrorPrior * P) + (Integral * I) + (pDerivative * D) + Bias);
+	return ((ErrorPrior * P) + (Integral * I) + (pDerivative * D) + Bias) * DeltaTime;
 }
