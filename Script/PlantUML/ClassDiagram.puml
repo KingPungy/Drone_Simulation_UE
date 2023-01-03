@@ -1,0 +1,225 @@
+@startuml Klasse Diagram
+title Klasse Diagram
+!theme vibrant
+skinparam TitleFontName Calibri
+skinparam TitleFontSize 40
+
+
+Abstract Class AActor{
+}
+
+
+Abstract class Drone_Class {
+}
+
+Struct ModuleOrder {
+    + Module And Message Order: List<Module_And_Message>
+}
+
+Struct Module_And_Message {
+    + Module: Base_Module
+    + Message: Message_Structure
+}
+
+Struct Message_Structure {
+    + TitleText: Text
+    + Image: Texture2D
+    + MessageText: Text
+}
+
+Enum Level_State {
+    + Pre-Level
+    + Level in progress
+    + Level Failed
+    + Level Completed
+}
+
+class Progress_Widget_Text <<UserWidget>>
+{
+    + ProgressText: TextBlock
+}
+
+class Progress_Widget_Bar <<UserWidget>>
+{
+    + ProgressBar: ProgressBar
+}
+
+
+Abstract Base_Module << (M,#FF7700) AActor>>
+{
+    ==(Variables)==
+    ..(Editor)..
+    + Color: LinearColor
+    + Title: Text
+    + Explanation_Text: Text
+    ..(BP)..
+    + Triggered: Bool
+    + Completed: Bool
+    + Progress_Widget: UserWidget
+
+    - {abstract} Progress_Widget_Class: *UserWidget
+    ==(Events)==
+    ~ {abstract} Event BeginPlay()
+    # {abstract} Event ActorBeginOverlap()
+    # {abstract} Event ActorEndOverlap()
+    # {Abstract} Complete_Module()->Module_Sequencer
+    ==(Functions)==
+    - Create_Progress_Widget(): Void
+    - {abstract} Set_Progress_Text(Text): Void
+    - {abstract} Set_Progress_Value(Float): Void
+    ==Viewport==
+    + Cube: StaticMesh
+    + Box: Box Collision
+}
+
+Class Trigger_Module extends Base_Module
+{
+    ==(Variables)==
+    ..(BP)..
+    - Progress_Widget_Class: Progress_Widget_Text
+    ==(Events)==
+    ~ Event BeginPlay()
+    # Event ActorBeginOverlap()
+    # Event ActorEndOverlap()
+}
+
+Class Hover_Module extends Base_Module
+{
+    ==(Variables)==
+    ..(Editor)..
+    + HoverTime: Float
+    ..(BP)..
+    - Timer_Handle: Timer_Handle
+    - Progress_Widget_Class: Progress_Widget_Text
+    ==(Events)==
+    ~ Event BeginPlay()
+    ~ Event Tick()
+    # Event ActorBeginOverlap()
+    # Event ActorEndOverlap()
+    ==(Viewport)==
+    + Hover_Text: TextRenderComponent
+}
+
+Class Turn_Module extends Base_Module
+{
+    ==(Variables)==
+    ..(BP)..
+    - Progress_Widget_Class: Progress_Widget_Text
+    ==(Events)==
+    ~ Event BeginPlay()
+    ~ Event Tick()
+    # Event ActorBeginOverlap()
+    # Event ActorEndOverlap()
+    ==(Viewport)==
+    + Arrow: Arrow Component
+}
+
+Class Encircle_Module extends Base_Module
+{
+    ==(Variables)==
+    ..(Editor)..
+    + Accuracy: Int
+    ..(BP)..
+    - Progress: Float
+    - Completed_Rotation: Array<Bool>
+    - Progress_Widget_Class: Progress_Widget_Text
+    ==(Events)==
+    ~ Event BeginPlay()
+    ~ Event Tick()
+    # Event ActorBeginOverlap()
+    # Event ActorEndOverlap()
+    ==(Viewport)==
+    + Arrow: Arrow Component
+}
+
+Class Landing_Module extends Base_Module
+{
+    ==(Variables)==
+    ..(Editor)..
+    + MaxLandingSpeed: Float
+    ..(BP)..
+    - ExceededLandingSpeed: Bool
+    - Progress_Widget_Class: Progress_Widget_Text
+    ==(Events)==
+    ~ Event BeginPlay()
+    ~ Event Tick()
+    # Event ActorBeginOverlap()
+    # Event ActorEndOverlap()
+    ==(Viewport)==
+    + Arrow: Arrow Component
+}
+
+
+Class Module_Sequencer <<AActor>>
+{
+    ==(Variables)==
+    ..(Editor)..
+    + Module_Order_List : Array<ModuleOrder>
+    + Start_Message_List: Array<Message_Structure>
+
+    + Timer: Float
+    ..(BP)..
+    # Module_Order_Array: Array<Base_Module>
+    # Message_Order_Array: Array<Message_Structure>
+
+    + Drone_Class: Drone_Class
+
+    - Training_Index: Int
+    - Completed_Modules: Int
+    - ModulesActive: Bool
+    - Difficulty: Int
+
+    - Hit_Counter: Int
+    - Max_Hits: Int
+    - Hit_Delay: Float
+    - BlockHits: Bool
+
+    - Timer_Handle: Timer_Handle
+
+    # Level_State: Enum<Level_State>
+    ==(Events)==
+    ~ Event BeginPlay()
+    ~ Event Tick()
+
+    {Abstract} # Drone_Class->OnDroneHit()
+    - TimerEnded(): Void
+    - Level_Complete(): Void
+    ..Start Message..
+    - Open_StartMessage(): Void
+    {Abstract} # Start_Message_Widget->StartButtonClicked()
+    ..Modules..
+
+    {Abstract} # Base_Module->Complete_Module()->Check_Modules(): Void
+    ==(Functions)==
+    - Set_Level_Timer(Int:Difficulty): Timer_Handle
+    ..Module order..
+    - Is_level_Completed(): Bool
+    - Get_Current_Module(): Base_Module
+    - Set_UI_Elements_to_new_current_Module(): Void
+    - Set_All_but_current_Module_Hidden(): Void
+    - Set_Completed_Level_UI_Text(): Void
+    - Set_Completed_Modules(): Void
+    ..Functional..
+    - Hide_All_Modules(): Void
+    - Parse_Level_Options(): Void
+    - Message_Struct_Equal(Message_Structure,
+    Message_Structure): Bool
+    ==(Viewport)==
+    + Module_Sequencer_Text: Text Render Component
+}
+
+
+
+Module_Sequencer "1" -left- "*" ModuleOrder: contains
+Module_Sequencer "1" -- "1" Level_State: contains
+
+
+
+ModuleOrder "1" -- "*" Module_And_Message : contains
+Module_And_Message "1" -- "1" Message_Structure : contains
+Module_And_Message "1" -- "1" Base_Module: contains
+
+Progress_Widget_Bar -up- UserWidget
+Progress_Widget_Text -up- UserWidget
+
+@enduml
