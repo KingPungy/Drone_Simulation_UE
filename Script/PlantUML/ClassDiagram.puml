@@ -3,6 +3,9 @@ title Klasse Diagram
 !theme vibrant
 skinparam TitleFontName Calibri
 skinparam TitleFontSize 40
+skinparam ClassBackgroundColor lightcyan/LightGoldenRodYellow
+skinparam defaultFontColor black
+
 
 
 Abstract Class AActor{
@@ -14,7 +17,7 @@ Abstract class Drone_Class extends AActor {
 }
 
 Struct ModuleOrder {
-    + Module And Message Order: List<Module_And_Message>
+    + Module_And_Message_Order: List<Module_And_Message>
 }
 
 Struct Module_And_Message {
@@ -231,6 +234,8 @@ Class Module_Sequencer <<AActor>> extends AActor
     + Module_Sequencer_Text: Text Render Component
 }
 
+class Module_Sequencer #LightCyan/LightGoldenRodYellow
+
 
 ' AActor -- Module_Sequencer
 ' AActor -- Drone_Class
@@ -242,8 +247,8 @@ Class Module_Sequencer <<AActor>> extends AActor
 
 
 
-Module_Sequencer "1" -left- "*" ModuleOrder: contains
-Module_Sequencer "1" -- "1" Level_State: contains
+Module_Sequencer "1" -left- "*" ModuleOrder : contains
+Module_Sequencer::Level_State "1" -- "1" Level_State : contains
 
 
 
@@ -251,7 +256,7 @@ Module_Sequencer "1" -- "1" Level_State: contains
 ModuleOrder "1" *-down- "*" Module_And_Message : contains
 Module_And_Message "1" *-down- "1" Message_Structure : contains
 
-Base_Module "1"-left- "1" Module_And_Message: contains
+Base_Module "1"-left- "1" Module_And_Message : contains
 
 
 @enduml
