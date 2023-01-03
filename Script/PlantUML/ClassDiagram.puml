@@ -6,10 +6,11 @@ skinparam TitleFontSize 40
 
 
 Abstract Class AActor{
+    Unreal Base Class
 }
 
 
-Abstract class Drone_Class {
+Abstract class Drone_Class extends AActor {
 }
 
 Struct ModuleOrder {
@@ -34,18 +35,18 @@ Enum Level_State {
     + Level Completed
 }
 
-class Progress_Widget_Text <<UserWidget>>
+class Progress_Widget_Text <<UserWidget>> extends UserWidget
 {
     + ProgressText: TextBlock
 }
 
-class Progress_Widget_Bar <<UserWidget>>
+class Progress_Widget_Bar <<UserWidget>> extends UserWidget
 {
     + ProgressBar: ProgressBar
 }
 
 
-Abstract Base_Module << (M,#FF7700) AActor>>
+Abstract Base_Module << (M,#FF7700) AActor>> extends AActor
 {
     ==(Variables)==
     ..(Editor)..
@@ -67,12 +68,14 @@ Abstract Base_Module << (M,#FF7700) AActor>>
     - Create_Progress_Widget(): Void
     - {abstract} Set_Progress_Text(Text): Void
     - {abstract} Set_Progress_Value(Float): Void
-    ==Viewport==
+    ==(Viewport)==
     + Cube: StaticMesh
     + Box: Box Collision
 }
 
-Class Trigger_Module extends Base_Module
+
+
+Class Trigger_Module <<Base_Module>> extends Base_Module
 {
     ==(Variables)==
     ..(BP)..
@@ -83,7 +86,7 @@ Class Trigger_Module extends Base_Module
     # Event ActorEndOverlap()
 }
 
-Class Hover_Module extends Base_Module
+Class Hover_Module <<Base_Module>> extends Base_Module
 {
     ==(Variables)==
     ..(Editor)..
@@ -100,7 +103,7 @@ Class Hover_Module extends Base_Module
     + Hover_Text: TextRenderComponent
 }
 
-Class Turn_Module extends Base_Module
+Class Turn_Module <<Base_Module>> extends Base_Module
 {
     ==(Variables)==
     ..(BP)..
@@ -114,7 +117,7 @@ Class Turn_Module extends Base_Module
     + Arrow: Arrow Component
 }
 
-Class Encircle_Module extends Base_Module
+Class Encircle_Module <<Base_Module>> extends Base_Module
 {
     ==(Variables)==
     ..(Editor)..
@@ -132,7 +135,7 @@ Class Encircle_Module extends Base_Module
     + Arrow: Arrow Component
 }
 
-Class Landing_Module extends Base_Module
+Class Landing_Module <<Base_Module>> extends Base_Module
 {
     ==(Variables)==
     ..(Editor)..
@@ -149,8 +152,28 @@ Class Landing_Module extends Base_Module
     + Arrow: Arrow Component
 }
 
+Class Wind_Volume <<AActor>> extends AActor
+{
+    ==(Variables)==
+    ..(Editor)..
+    + Wind_Speed: Float
+    + Color: LinearColor
+    ..(BP)..
+    + Wind_Enabled: Bool
+    ==(Events)==
+    ~ Event BeginPlay()
+    ~ Event Tick()
+    # Event ActorBeginOverlap()
+    # Event ActorEndOverlap()
+    ==(Viewport)==
+    + Cube: StaticMesh
+    + P_Wind: Niagara particle System Component
+    + Wind_Direction: Arrow Component
+    + Box: Box Collision
+}
 
-Class Module_Sequencer <<AActor>>
+
+Class Module_Sequencer <<AActor>> extends AActor
 {
     ==(Variables)==
     ..(Editor)..
@@ -209,17 +232,26 @@ Class Module_Sequencer <<AActor>>
 }
 
 
+' AActor -- Module_Sequencer
+' AActor -- Drone_Class
+' AActor -- Base_Module
+' AActor -- Wind_Volume
+
+' Progress_Widget_Bar -up- UserWidget
+' Progress_Widget_Text -up- UserWidget
+
+
 
 Module_Sequencer "1" -left- "*" ModuleOrder: contains
 Module_Sequencer "1" -- "1" Level_State: contains
 
 
 
-ModuleOrder "1" -- "*" Module_And_Message : contains
-Module_And_Message "1" -- "1" Message_Structure : contains
-Module_And_Message "1" -- "1" Base_Module: contains
 
-Progress_Widget_Bar -up- UserWidget
-Progress_Widget_Text -up- UserWidget
+ModuleOrder "1" *-down- "*" Module_And_Message : contains
+Module_And_Message "1" *-down- "1" Message_Structure : contains
+
+Base_Module "1"-left- "1" Module_And_Message: contains
+
 
 @enduml
