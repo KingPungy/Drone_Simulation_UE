@@ -14,7 +14,7 @@ Abstract Class AActor{
 ' ===============================================
 
 ' (Drones)=======================================
-Abstract class Drone_Class extends AActor
+Abstract class Drone_Class  
 {
     ==(Variables)==
     ..(Editor)..
@@ -155,8 +155,6 @@ Class PID_Function_Library <<(F,#9c74b3) Blueprint Function Library>>
     ErrorPrior: &Float): Float
 }
 
-
-
 ' (Structs and datatypes)========================
 Struct ModuleOrder
 {
@@ -186,26 +184,21 @@ Enum Level_State
 }
 ' ===============================================
 
-
-
-
-
 ' (Widgets)======================================
 
-class Progress_Widget_Text <<UserWidget>> extends UserWidget
+class Progress_Widget_Text <<UserWidget>>  
 {
     + ProgressText: TextBlock
 }
 
-class Progress_Widget_Bar <<UserWidget>> extends UserWidget
+class Progress_Widget_Bar <<UserWidget>>  
 {
     + ProgressBar: ProgressBar
 }
 
-
 ' (Message Widgets)==============================
 
-Class StartMessage_Widget <<UserWidget>> extends UserWidget
+Class StartMessage_Widget <<UserWidget>>  
 {
     ==(Variables)==
     ..(Spawn)..
@@ -225,7 +218,7 @@ Class StartMessage_Widget <<UserWidget>> extends UserWidget
     - TextSizeBox: SizeBox
 }
 
-Class RestartMessage_Widget <<UserWidget>> extends UserWidget
+Class RestartMessage_Widget <<UserWidget>>  
 {
     ==(Variables)==
     ..(Spawn)..
@@ -248,7 +241,7 @@ Class RestartMessage_Widget <<UserWidget>> extends UserWidget
     - TextSizeBox: SizeBox
 }
 
-Class CompleteLevelMessage_Widget <<UserWidget>> extends UserWidget
+Class CompleteLevelMessage_Widget <<UserWidget>>  
 {
     ==(Variables)==
     ..(Spawn)..
@@ -271,7 +264,7 @@ Class CompleteLevelMessage_Widget <<UserWidget>> extends UserWidget
     - TextSizeBox: SizeBox
 }
 
-Class TutorialMessage_Widget <<UserWidget>> extends UserWidget
+Class TutorialMessage_Widget <<UserWidget>>  
 {
     ==(Variables)==
     ..(Spawn)..
@@ -288,23 +281,18 @@ Class TutorialMessage_Widget <<UserWidget>> extends UserWidget
 }
 
 ' (UI Widgets)===================================
-
-class MainMenu <<UserWidget>> extends UserWidget
+class MainMenu <<UserWidget>>  
 {
 
 }
 
-class LevelPreview_Widget <<UserWidget>> extends UserWidget
+class LevelPreview_Widget <<UserWidget>>  
 {
 
 }
 
-class PauseMenu <<UserWidget>> extends UserWidget
-{
 
-}
-
-class DroneHUD_BP <<UserWidget>> extends UserWidget
+class DroneHUD_BP <<UserWidget>>  
 {
     ==(Variables)==
     ..(Editor)..
@@ -342,23 +330,25 @@ class DroneHUD_BP <<UserWidget>> extends UserWidget
     ..
     - Get_Hit_Text(): Text
     - Get_Time_Left_Text(): Text
+
 }
 
-class HUD_Detection_Ring <<UserWidget>> extends UserWidget
+class PauseMenu <<UserWidget>>  
 {
 
 }
 
+class HUD_Detection_Ring <<UserWidget>>  
+{
+
+}
 
 ' ===============================================
 
 
-
-
-
 ' (Modules)======================================
 
-Abstract Base_Module << (M,#FF7700) AActor>> extends AActor
+Abstract Base_Module << (M,#FF7700) AActor>>  
 {
     ==(Variables)==
     ..(Editor)..
@@ -462,7 +452,7 @@ Class Landing_Module <<(M,#FF7700) Base_Module>> extends Base_Module
     + Arrow: Arrow Component
 }
 
-Class Wind_Volume <<AActor>> extends AActor
+Class Wind_Volume <<AActor>>  
 {
     ==(Variables)==
     ..(Editor)..
@@ -486,11 +476,8 @@ Class Wind_Volume <<AActor>> extends AActor
 ' ===============================================
 
 
-
-
-
 ' (Sequencer)====================================
-Class Module_Sequencer <<AActor>> extends AActor
+Class Module_Sequencer <<AActor>>  
 {
     ==(Variables)==
     ..(Editor)..
@@ -549,9 +536,6 @@ class Module_Sequencer #LightCyan/LightGoldenRodYellow
 
 ' ===============================================
 
-
-
-
 ' (Class Setup template)=========================
 
 ' ==(Variables)==
@@ -575,8 +559,6 @@ class Module_Sequencer #LightCyan/LightGoldenRodYellow
 
 ' ===============================================
 
-
-
 ' (Connections)==================================
 
 Module_Sequencer "1" -left- "*" ModuleOrder : contains
@@ -589,8 +571,9 @@ Module_And_Message "1" *-down- "1" Message_Structure : contains
 Base_Module "1"-left- "1" Module_And_Message : contains
 
 
-Drone_Class -right-> PID_Function_Library: Uses
-' DroneHUD_BP --> Module_Sequencer: Contains
+Drone_Class --> PID_Function_Library: Uses
+Drone_Class -left-> DroneHUD_BP: Contains
+DroneHUD_BP -left-> Module_Sequencer: Contains
 
 ' ===============================================
 
