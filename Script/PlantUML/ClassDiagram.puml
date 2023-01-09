@@ -13,8 +13,107 @@ Abstract Class AActor{
 
 ' ===============================================
 
+
+' (Message Widgets)==============================
+
+Class StartMessage_Widget <<UserWidget>>  
+{
+    ==(Variables)==
+    ..(Spawn)..
+    + MessageStruct: Message_Structure
+    ==(Events)==
+    # On Clicked (ResumeButton) -> ClosedMessage()
+    ..(KeyEvents)..
+    # Enter Key() -> ClosedMessage()
+    ..(Event Dispatchers)..
+    + ClosedMessage()
+    ==(Viewport)==
+    - ImageScaleBox: ScaleBox
+    - Message: TextBlock
+    - MessageImage: Image
+    - MessageTitle: TextBlock
+    - ResumeButton: Button
+    - TextSizeBox: SizeBox
+}
+
+Class RestartMessage_Widget <<UserWidget>>  
+{
+    ==(Variables)==
+    ..(Spawn)..
+    + MessageStruct: Message_Structure
+    ==(Events)==
+    # On Clicked (RestartButton) -> ClosedMessage()
+    # On Clicked (QuitButton) -> ClosedMessage()
+    ..(KeyEvents)..
+    # Enter Key() -> ClosedMessage()
+    # Backspace Key() -> ClosedMessage()
+    ..(Event Dispatchers)..
+    + ClosedMessage()
+    ==(Viewport)==
+    - ImageScaleBox: ScaleBox
+    - Message: TextBlock
+    - MessageImage: Image
+    - MessageTitle: TextBlock
+    - QuitButton: Button
+    - RestartButton: Button
+    - TextSizeBox: SizeBox
+}
+
+Class CompleteLevelMessage_Widget <<UserWidget>>  
+{
+    ==(Variables)==
+    ..(Spawn)..
+    + MessageStruct: Message_Structure
+    ==(Events)==
+    # On Clicked (RestartButton) -> ClosedMessage()
+    # On Clicked (QuitButton) -> ClosedMessage()
+    ..(KeyEvents)..
+    # Enter Key() -> ClosedMessage()
+    # Backspace Key() -> ClosedMessage()
+    ..(Event Dispatchers)..
+    + ClosedMessage()
+    ==(Viewport)==
+    - ImageScaleBox: ScaleBox
+    - Message: TextBlock
+    - MessageImage: Image
+    - MessageTitle: TextBlock
+    - QuitButton: Button
+    - RestartButton: Button
+    - TextSizeBox: SizeBox
+}
+
+Class TutorialMessage_Widget <<UserWidget>>  
+{
+    ==(Variables)==
+    ..(Spawn)..
+    + MessageStruct: Message_Structure
+    ==(Events)==
+    # On Clicked (ResumeButton)
+    ..(KeyEvents)..
+    # Enter Key()
+    ==(Viewport)==
+    - Message: TextBlock
+    - TutorialImage: Image
+    - TutorialTitle: TextBlock
+    - ResumeButton: Button
+}
+
+' (UI Widgets)===================================
+class MainMenu <<UserWidget>>  
+{
+
+}
+
+class LevelPreview_Widget <<UserWidget>>  
+{
+
+}
+
+newpage
+skinparam ClassBackgroundColor lightcyan/LightGoldenRodYellow
+
 ' (Drones)=======================================
-Abstract class Drone_Class  
+Abstract class Drone_Class
 {
     ==(Variables)==
     ..(Editor)..
@@ -129,6 +228,7 @@ Abstract class Drone_#n <<Drone_Class>> extends Drone_Class
 
 ' ===============================================
 
+
 Class PID_Function_Library <<(F,#9c74b3) Blueprint Function Library>>
 {
     ==(Local Variables)==
@@ -196,100 +296,6 @@ class Progress_Widget_Bar <<UserWidget>>
     + ProgressBar: ProgressBar
 }
 
-' (Message Widgets)==============================
-
-Class StartMessage_Widget <<UserWidget>>  
-{
-    ==(Variables)==
-    ..(Spawn)..
-    + MessageStruct: Message_Structure
-    ==(Events)==
-    # On Clicked (ResumeButton) -> ClosedMessage()
-    ..(KeyEvents)..
-    # Enter Key() -> ClosedMessage()
-    ..(Event Dispatchers)..
-    + ClosedMessage()
-    ==(Viewport)==
-    - ImageScaleBox: ScaleBox
-    - Message: TextBlock
-    - MessageImage: Image
-    - MessageTitle: TextBlock
-    - ResumeButton: Button
-    - TextSizeBox: SizeBox
-}
-
-Class RestartMessage_Widget <<UserWidget>>  
-{
-    ==(Variables)==
-    ..(Spawn)..
-    + MessageStruct: Message_Structure
-    ==(Events)==
-    # On Clicked (RestartButton) -> ClosedMessage()
-    # On Clicked (QuitButton) -> ClosedMessage()
-    ..(KeyEvents)..
-    # Enter Key() -> ClosedMessage()
-    # Backspace Key() -> ClosedMessage()
-    ..(Event Dispatchers)..
-    + ClosedMessage()
-    ==(Viewport)==
-    - ImageScaleBox: ScaleBox
-    - Message: TextBlock
-    - MessageImage: Image
-    - MessageTitle: TextBlock
-    - QuitButton: Button
-    - RestartButton: Button
-    - TextSizeBox: SizeBox
-}
-
-Class CompleteLevelMessage_Widget <<UserWidget>>  
-{
-    ==(Variables)==
-    ..(Spawn)..
-    + MessageStruct: Message_Structure
-    ==(Events)==
-    # On Clicked (RestartButton) -> ClosedMessage()
-    # On Clicked (QuitButton) -> ClosedMessage()
-    ..(KeyEvents)..
-    # Enter Key() -> ClosedMessage()
-    # Backspace Key() -> ClosedMessage()
-    ..(Event Dispatchers)..
-    + ClosedMessage()
-    ==(Viewport)==
-    - ImageScaleBox: ScaleBox
-    - Message: TextBlock
-    - MessageImage: Image
-    - MessageTitle: TextBlock
-    - QuitButton: Button
-    - RestartButton: Button
-    - TextSizeBox: SizeBox
-}
-
-Class TutorialMessage_Widget <<UserWidget>>  
-{
-    ==(Variables)==
-    ..(Spawn)..
-    + MessageStruct: Message_Structure
-    ==(Events)==
-    # On Clicked (ResumeButton)
-    ..(KeyEvents)..
-    # Enter Key()
-    ==(Viewport)==
-    - Message: TextBlock
-    - TutorialImage: Image
-    - TutorialTitle: TextBlock
-    - ResumeButton: Button
-}
-
-' (UI Widgets)===================================
-class MainMenu <<UserWidget>>  
-{
-
-}
-
-class LevelPreview_Widget <<UserWidget>>  
-{
-
-}
 
 
 class DroneHUD_BP <<UserWidget>>  
@@ -344,8 +350,8 @@ class HUD_Detection_Ring <<UserWidget>>
 }
 
 ' ===============================================
-
-
+newpage
+skinparam ClassBackgroundColor lightcyan/LightGoldenRodYellow
 ' (Modules)======================================
 
 Abstract Base_Module << (M,#FF7700) AActor>>  
@@ -532,7 +538,7 @@ Class Module_Sequencer <<AActor>>
     ==(Viewport)==
     + Module_Sequencer_Text: Text Render Component
 }
-class Module_Sequencer #LightCyan/LightGoldenRodYellow
+' class Module_Sequencer #LightCyan/LightGoldenRodYellow
 
 ' ===============================================
 
