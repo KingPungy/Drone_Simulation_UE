@@ -231,11 +231,6 @@ Abstract class Drone_#n <<Drone_Class>> extends Drone_Class
 
 Class PID_Function_Library <<(F,#9c74b3) Blueprint Function Library>>
 {
-    ==(Local Variables)==
-    -pErrorPrior: Float
-    -pError: Float
-    -pIntegral: Float
-    -pDerivative: Float
     ==(Functions)==
     + PID_Calculation_BP(
     DeltaTime:Float
