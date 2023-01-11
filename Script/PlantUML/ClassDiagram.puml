@@ -1,116 +1,10 @@
 @startuml Klasse Diagram
 title Klasse Diagram
-!theme vibrant
 skinparam TitleFontName Calibri
 skinparam TitleFontSize 40
 skinparam ClassBackgroundColor lightcyan/LightGoldenRodYellow
 skinparam defaultFontColor black
 
-' (Unreal Classes)===============================
-Abstract Class AActor{
-    Unreal Base Class
-}
-
-' ===============================================
-
-
-' (Message Widgets)==============================
-
-Class StartMessage_Widget <<UserWidget>>  
-{
-    ==(Variables)==
-    ..(Spawn)..
-    + MessageStruct: Message_Structure
-    ==(Events)==
-    # On Clicked (ResumeButton) -> ClosedMessage()
-    ..(KeyEvents)..
-    # Enter Key() -> ClosedMessage()
-    ..(Event Dispatchers)..
-    + ClosedMessage()
-    ==(Viewport)==
-    - ImageScaleBox: ScaleBox
-    - Message: TextBlock
-    - MessageImage: Image
-    - MessageTitle: TextBlock
-    - ResumeButton: Button
-    - TextSizeBox: SizeBox
-}
-
-Class RestartMessage_Widget <<UserWidget>>  
-{
-    ==(Variables)==
-    ..(Spawn)..
-    + MessageStruct: Message_Structure
-    ==(Events)==
-    # On Clicked (RestartButton) -> ClosedMessage()
-    # On Clicked (QuitButton) -> ClosedMessage()
-    ..(KeyEvents)..
-    # Enter Key() -> ClosedMessage()
-    # Backspace Key() -> ClosedMessage()
-    ..(Event Dispatchers)..
-    + ClosedMessage()
-    ==(Viewport)==
-    - ImageScaleBox: ScaleBox
-    - Message: TextBlock
-    - MessageImage: Image
-    - MessageTitle: TextBlock
-    - QuitButton: Button
-    - RestartButton: Button
-    - TextSizeBox: SizeBox
-}
-
-Class CompleteLevelMessage_Widget <<UserWidget>>  
-{
-    ==(Variables)==
-    ..(Spawn)..
-    + MessageStruct: Message_Structure
-    ==(Events)==
-    # On Clicked (RestartButton) -> ClosedMessage()
-    # On Clicked (QuitButton) -> ClosedMessage()
-    ..(KeyEvents)..
-    # Enter Key() -> ClosedMessage()
-    # Backspace Key() -> ClosedMessage()
-    ..(Event Dispatchers)..
-    + ClosedMessage()
-    ==(Viewport)==
-    - ImageScaleBox: ScaleBox
-    - Message: TextBlock
-    - MessageImage: Image
-    - MessageTitle: TextBlock
-    - QuitButton: Button
-    - RestartButton: Button
-    - TextSizeBox: SizeBox
-}
-
-Class TutorialMessage_Widget <<UserWidget>>  
-{
-    ==(Variables)==
-    ..(Spawn)..
-    + MessageStruct: Message_Structure
-    ==(Events)==
-    # On Clicked (ResumeButton)
-    ..(KeyEvents)..
-    # Enter Key()
-    ==(Viewport)==
-    - Message: TextBlock
-    - TutorialImage: Image
-    - TutorialTitle: TextBlock
-    - ResumeButton: Button
-}
-
-' (UI Widgets)===================================
-class MainMenu <<UserWidget>>  
-{
-
-}
-
-class LevelPreview_Widget <<UserWidget>>  
-{
-
-}
-
-newpage
-skinparam ClassBackgroundColor lightcyan/LightGoldenRodYellow
 
 ' (Drones)=======================================
 Abstract class Drone_Class
@@ -226,9 +120,6 @@ Abstract class Drone_#n <<Drone_Class>> extends Drone_Class
 
 }
 
-' ===============================================
-
-
 Class PID_Function_Library <<(F,#9c74b3) Blueprint Function Library>>
 {
     ==(Functions)==
@@ -249,6 +140,93 @@ Class PID_Function_Library <<(F,#9c74b3) Blueprint Function Library>>
     Integral: &Float
     ErrorPrior: &Float): Float
 }
+' ===============================================
+
+
+' newpage
+' skinparam ClassBackgroundColor lightcyan/LightGoldenRodYellow
+
+Class Wind_Volume <<AActor>>
+{
+    ==(Variables)==
+    ..(Editor)..
+    + Wind_Speed: Float
+    + Color: LinearColor
+    ..(BP)..
+    + Wind_Enabled: Bool
+    ==(Events)==
+    ~ Event BeginPlay()
+    ~ Event Tick()
+
+    # Event ActorBeginOverlap()
+    # Event ActorEndOverlap()
+    ==(Viewport)==
+    + Cube: StaticMesh
+    + P_Wind: Niagara particle System Component
+    + Wind_Direction: Arrow Component
+    + Box: Box Collision
+}
+
+' ===============================================
+
+
+' (Sequencer)====================================
+Class Module_Sequencer <<AActor>>
+{
+    ==(Variables)==
+    ..(Editor)..
+    + Module_Order_List : Array<ModuleOrder>
+    + Start_Message_List: Array<Message_Structure>
+    ..(BP)..
+    # Module_Order_Array: Array<Base_Module>
+    # Message_Order_Array: Array<Message_Structure>
+
+    + Drone_Class: Drone_Class
+
+    - Training_Index: Int
+    - Completed_Modules: Int
+    - ModulesActive: Bool
+    - Difficulty: Int
+
+    - Hit_Counter: Int
+    - Max_Hits: Int
+    - Hit_Delay: Float
+    - BlockHits: Bool
+
+    - Timer_Handle: Timer_Handle
+
+    # Level_State: Enum<Level_State>
+    ==(Events)==
+    ~ Event BeginPlay()
+    ~ Event Tick()
+
+    {Abstract} # Drone_Class->OnDroneHit()
+    - TimerEnded(): Void
+    - Level_Complete(): Void
+    ..Start Message..
+    - Open_StartMessage(): Void
+    {Abstract} # Start_Message_Widget->StartButtonClicked()
+    ..Modules..
+
+    {Abstract} # Base_Module->Complete_Module()->Check_Modules(): Void
+    ==(Functions)==
+    - Set_Level_Timer(Int:Difficulty, Float:Time): Timer_Handle
+    ..Module order..
+    - Is_level_Completed(): Bool
+    - Get_Current_Module(): Base_Module
+    - Set_UI_Elements_to_new_current_Module(): Void
+    - Set_All_but_current_Module_Hidden(): Void
+    - Set_Completed_Level_UI_Text(): Void
+    - Set_Completed_Modules(): Void
+    ..Functional..
+    - Hide_All_Modules(): Void
+    - Parse_Level_Options(): Void
+    - Message_Struct_Equal(Message_Structure,
+    Message_Structure): Bool
+    ==(Viewport)==
+    + Module_Sequencer_Text: Text Render Component
+}
+
 
 ' (Structs and datatypes)========================
 Struct ModuleOrder
@@ -277,79 +255,16 @@ Enum Level_State
     + Level Failed
     + Level Completed
 }
-' ===============================================
 
-' (Widgets)======================================
+ModuleOrder "1" *-down- "*" Module_And_Message : contains
+Module_And_Message "1" *-down- "1" Message_Structure : contains
 
-class Progress_Widget_Text <<UserWidget>>  
-{
-    + ProgressText: TextBlock
-}
-
-class Progress_Widget_Bar <<UserWidget>>  
-{
-    + ProgressBar: ProgressBar
-}
+Base_Module "1"-left- "1" Module_And_Message : contains
 
 
-
-class DroneHUD_BP <<UserWidget>>  
-{
-    ==(Variables)==
-    ..(Editor)..
-    + CompletedModules: TextBlock
-    + DroneDirection: Image
-    + Explanation_Text: TextBlock
-    + HitText: TextBlock
-    + InputCircleL: Image
-    + InputCircleR: Image
-    + MiniMap: Image
-    + MiniMapOutline: Image
-    + ModuleCompass: Image
-    + ModuleProgressSlot: NamedSlot
-    + NextModule: TextBlock
-    + Timer: TextBlock
-    ..(BP)..
-    + Tiltbar: Image
-    - Module_Sequencer: Module Sequencer
-    ==(Events)==
-    ~ Event BeginPlay()
-    ~ Event Tick()
-
-    # InputAction HideUI()
-    ==(Functions)==
-    + Set_Next_Module_Text(Modulename:Text): Void
-    + Set_Explanation_Text(Explanation Text:Text): Void
-    + Set_Completed_Modules_Text(Completed:Int, Total:Int): Void
-
-    + Set_Module_Progress_Widget(ProgressWidget: UserWidget): Void
-    + Set_Compass_Rotation(Rotation:Float,Visible:Bool): Void
-    ..(Binded)..
-    - Set_VSpeedValue_Text(): Text
-    - Set_HSpeedValue_Text(): Text
-    - Set_HeightValue_Text(): Text
-    ..
-    - Get_Hit_Text(): Text
-    - Get_Time_Left_Text(): Text
-
-}
-
-class PauseMenu <<UserWidget>>  
-{
-
-}
-
-class HUD_Detection_Ring <<UserWidget>>  
-{
-
-}
-
-' ===============================================
-newpage
-skinparam ClassBackgroundColor lightcyan/LightGoldenRodYellow
 ' (Modules)======================================
 
-Abstract Base_Module << (M,#FF7700) AActor>>  
+Abstract Base_Module << (M,#FF7700) AActor>>
 {
     ==(Variables)==
     ..(Editor)..
@@ -453,87 +368,6 @@ Class Landing_Module <<(M,#FF7700) Base_Module>> extends Base_Module
     + Arrow: Arrow Component
 }
 
-Class Wind_Volume <<AActor>>  
-{
-    ==(Variables)==
-    ..(Editor)..
-    + Wind_Speed: Float
-    + Color: LinearColor
-    ..(BP)..
-    + Wind_Enabled: Bool
-    ==(Events)==
-    ~ Event BeginPlay()
-    ~ Event Tick()
-
-    # Event ActorBeginOverlap()
-    # Event ActorEndOverlap()
-    ==(Viewport)==
-    + Cube: StaticMesh
-    + P_Wind: Niagara particle System Component
-    + Wind_Direction: Arrow Component
-    + Box: Box Collision
-}
-
-' ===============================================
-
-
-' (Sequencer)====================================
-Class Module_Sequencer <<AActor>>  
-{
-    ==(Variables)==
-    ..(Editor)..
-    + Module_Order_List : Array<ModuleOrder>
-    + Start_Message_List: Array<Message_Structure>
-    ..(BP)..
-    # Module_Order_Array: Array<Base_Module>
-    # Message_Order_Array: Array<Message_Structure>
-
-    + Drone_Class: Drone_Class
-
-    - Training_Index: Int
-    - Completed_Modules: Int
-    - ModulesActive: Bool
-    - Difficulty: Int
-
-    - Hit_Counter: Int
-    - Max_Hits: Int
-    - Hit_Delay: Float
-    - BlockHits: Bool
-
-    - Timer_Handle: Timer_Handle
-
-    # Level_State: Enum<Level_State>
-    ==(Events)==
-    ~ Event BeginPlay()
-    ~ Event Tick()
-
-    {Abstract} # Drone_Class->OnDroneHit()
-    - TimerEnded(): Void
-    - Level_Complete(): Void
-    ..Start Message..
-    - Open_StartMessage(): Void
-    {Abstract} # Start_Message_Widget->StartButtonClicked()
-    ..Modules..
-
-    {Abstract} # Base_Module->Complete_Module()->Check_Modules(): Void
-    ==(Functions)==
-    - Set_Level_Timer(Int:Difficulty, Float:Time): Timer_Handle
-    ..Module order..
-    - Is_level_Completed(): Bool
-    - Get_Current_Module(): Base_Module
-    - Set_UI_Elements_to_new_current_Module(): Void
-    - Set_All_but_current_Module_Hidden(): Void
-    - Set_Completed_Level_UI_Text(): Void
-    - Set_Completed_Modules(): Void
-    ..Functional..
-    - Hide_All_Modules(): Void
-    - Parse_Level_Options(): Void
-    - Message_Struct_Equal(Message_Structure,
-    Message_Structure): Bool
-    ==(Viewport)==
-    + Module_Sequencer_Text: Text Render Component
-}
-' class Module_Sequencer #LightCyan/LightGoldenRodYellow
 
 ' ===============================================
 
@@ -566,10 +400,6 @@ Module_Sequencer "1" -left- "*" ModuleOrder : contains
 Module_Sequencer::Level_State "1" -- "1" Level_State : contains
 
 
-ModuleOrder "1" *-down- "*" Module_And_Message : contains
-Module_And_Message "1" *-down- "1" Message_Structure : contains
-
-Base_Module "1"-left- "1" Module_And_Message : contains
 
 
 Drone_Class --> PID_Function_Library: Uses
@@ -577,5 +407,6 @@ Drone_Class -left-> DroneHUD_BP: Contains
 DroneHUD_BP -left-> Module_Sequencer: Contains
 
 ' ===============================================
+
 
 @enduml
