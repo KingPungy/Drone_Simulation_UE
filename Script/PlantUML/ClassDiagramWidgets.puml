@@ -63,7 +63,51 @@ class DroneHUD_BP <<UserWidget>>
 
 class PauseMenu <<UserWidget>>
 {
-    + Empty
+    ==(Variables)==
+    ..(BP)..
+    - Drone ref: Drone_Class
+    ==(Events)==
+    ~ Event Tick()
+    ~ Event BeginPlay()
+    ..(KeyEvents)..
+    ==(Functions)==
+    ..(Functional)..
+    - Remove Menu(): Void
+    - Text to Float(Text:Text): Float
+    - Set all Values(): Void
+    - Set BoxText Float(TextBox,Float): Void
+    ==(Viewport)==
+    - FPVCameraRotationLagSlider: Slider
+    - FPVFOVSlider: Slider
+    - TPVCameraDistanceSlider: Slider
+    - TPVCameraLagSlider: Slider
+    - TPVFOVSlider: Slider
+    - MiniMapSizeSlider: Slider
+    ..
+    - MaxThrustBox: TextBox
+    - MaxAscendSpeedBox: TextBox
+    - MaxDescendSpeedBox: TextBox
+    - MaxYawSpeedBox: TextBox
+    - MaxTiltAngleBox: TextBox
+    ..
+    - PIDAltitudeBox_P: TextBox
+    - PIDAltitudeBox_I: TextBox
+    - PIDAltitudeBox_D: TextBox
+    ..
+    - PIDPitchRoll_P: TextBox
+    - PIDPitchRoll_I: TextBox
+    - PIDPitchRoll_D: TextBox
+    ..
+    - PIDYaw_P: TextBox
+    - PIDYaw_I: TextBox
+    - PIDYaw_D: TextBox
+    ..
+    - QuitButton: Button
+    - RestartButton: Button
+    - ResumeButton: Button
+    ..
+    - Validationmark: Image
+
 }
 
 class HUD_Detection_Ring <<UserWidget>>
