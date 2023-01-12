@@ -69,11 +69,39 @@ class PauseMenu <<UserWidget>>
     ==(Events)==
     ~ Event Tick()
     ~ Event BeginPlay()
-    ..(KeyEvents)..
+    ..
+    # Validate Change_Event()
+    ..
+    # On Clicked (ResumeButton)
+    # On Clicked (QuitButton)
+    # On Clicked (RestartButton)
+    ..
+    # On Text Commited (MaxThrustBox)
+    # On Text Commited (MaxAscendSpeedBox)
+    # On Text Commited (MaxDescendSpeedBox)
+    # On Text Commited (MaxTiltAngleBox)
+    # On Text Commited (MaxYawSpeedBox)
+    ..
+    # On Text Commited (PIDAltitudeBox_P)
+    # On Text Commited (PIDAltitudeBox_I)
+    # On Text Commited (PIDAltitudeBox_D)
+    # On Text Commited (PIDPitchRoll_P)
+    # On Text Commited (PIDPitchRoll_I)
+    # On Text Commited (PIDPitchRoll_D)
+    # On Text Commited (PIDYaw_P)
+    # On Text Commited (PIDYaw_I)
+    # On Text Commited (PIDYaw_D)
+    ..
+    # On Value Changed (FPVCameraRotationLagSlider)
+    # On Value Changed (FPVFOVSlider)
+    # On Value Changed (TPVCameraDistanceSlider)
+    # On Value Changed (TPVCameraLagSlider)
+    # On Value Changed (TPVFOVSlider)
+    # On Value Changed (MiniMapSizeSlider)
     ==(Functions)==
     ..(Functional)..
     - Remove Menu(): Void
-    - Text to Float(Text:Text): Float
+    - Text to Float(Text): Float
     - Set all Values(): Void
     - Set BoxText Float(TextBox,Float): Void
     ==(Viewport)==
@@ -107,12 +135,17 @@ class PauseMenu <<UserWidget>>
     - ResumeButton: Button
     ..
     - Validationmark: Image
-
 }
 
 class HUD_Detection_Ring <<UserWidget>>
 {
-    + Empty
+    ==(Variables)==
+    ..(Spawn)..
+    - Target: Vector
+    ==(Events)==
+    ~ Event Construct()
+    ==(Viewport)==
+    - Detection_icon: Image
 }
 
 
@@ -298,18 +331,24 @@ class LevelTooltip_Widget <<UserWidget>>
     - Widgetpanel: Canvas Panel
 }
 
-Drone_Class --> HUD_Detection_Ring: Uses
-Drone_Class --> PauseMenu: Uses
+Drone_Class "1" *-- "0..*" HUD_Detection_Ring: spawns
+Drone_Class "1" *-- "1" PauseMenu: Uses
+Drone_Class "1" *-left- "1" DroneHUD_BP: Contains
+Drone_Class "1" -left-o "1" Module_Sequencer: Contains
 
-ModuleSequencer --> DroneHUD_BP: Uses
+DroneHUD_BP "1" <--o "1" Module_Sequencer: Accesses
 
-ModuleSequencer --> StartMessage_Widget: Uses
-ModuleSequencer --> RestartMessage_Widget: Uses
-ModuleSequencer --> CompleteLevelMessage_Widget: Uses
+Progress_Widget_Bar "0..1" --* "1" Base_Module: Contains
+Progress_Widget_Text "0..1" --* "1" Base_Module: Contains
+
+Module_Sequencer "1" *-- "1..*" StartMessage_Widget: Uses
+Module_Sequencer "1" *-- "1" RestartMessage_Widget: Uses
+Module_Sequencer "1" *-- "1" CompleteLevelMessage_Widget: Uses
+Module_Sequencer "1" *-- "1" TutorialMessage_Widget: Uses
 
 
-MainMenu --> LevelPreview_Widget: Contains
-LevelPreview_Widget --> LevelTooltip_Widget: Contains
+MainMenu "1" *-- "1..*" LevelPreview_Widget: Contains
+LevelPreview_Widget "1" *-- "1" LevelTooltip_Widget: Contains
 
 
 @enduml
