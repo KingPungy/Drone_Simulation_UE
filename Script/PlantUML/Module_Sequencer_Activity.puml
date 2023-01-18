@@ -82,10 +82,11 @@ repeat
     to current module;
     }
     
+   
+    partition Custom Events {
     
     fork again
     :Wait for events;
-    partition Custom Events {
         ' check modules
         fork
             #YellowGreen:Check Modules>
