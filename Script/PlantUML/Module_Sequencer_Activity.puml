@@ -2,6 +2,14 @@
 title Module Sequencer activity diagram
 skinparam ActivityBackgroundColor lightyellow
 
+
+partition Legenda {
+    #OrangeRed:Event>
+    detach
+    #YellowGreen:Bind Event>
+    detach
+}
+
 start
 
 #OrangeRed:Begin Play>
