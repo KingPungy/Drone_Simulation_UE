@@ -35,7 +35,7 @@ fork
     partition Event Tick {
         #OrangeRed:Event Tick>
         fork
-            :Get throttle input
+            :Get Throttle input
             for new PID Setpoint;
             :Thrust Controller adds force
             based on PID results;

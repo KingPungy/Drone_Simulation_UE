@@ -30,12 +30,12 @@ partition Begin Play actions {
             training indexes;
             detach
         fork again
-            if (Modules Active?) then (Yes)
+            if (Modules Active?) then (True)
                 :Bind Complete Module
                 events to Module Sequencer
                 check modules event;
                 detach
-            else (no)
+            else (False)
                 :Set Difficulty
                 to Free Flight;
                 detach
@@ -75,7 +75,7 @@ partition Begin Play actions {
             :Create Start message widget
             Pause Game;
             :Stop Loading Screen;
-            :Wait until start button is clicked;
+            :<&clock> Wait until start button is clicked;
             :Unpause game;
         end fork
     end fork
@@ -94,7 +94,7 @@ repeat
     fork again
     partition Custom Events {
     
-    :Wait for events;
+    :<&clock> Wait for events;
         ' check modules
         fork
             #YellowGreen:Check Modules>
@@ -102,39 +102,43 @@ repeat
             And Update Counter Text;
             :Set new current module;
 
-            if (Is level completed?) then (yes)
+            if (Is level completed?) then (True)
                 :Set Completed Level UI;
                 #OrangeRed:Level Complete>
                 :Create Level Complete Message;
                 :Pause Game;
                 end
-            else (No)
+            else (False)
                 :Set UI Elements to currrent module;
-                if (Current module has tutorial?) then (Yes)
+                if (Current module has tutorial?) then (True)
                     :Create Tutorial Message
                     and Pause Game;
+                    :<&clock> Wait for resume;
                 endif
             endif
         ' On Drone Hit
         fork again
             #YellowGreen:OnDroneHit>
 
-            if (Inside Landing Zone?) then (Yes)
+            if (Inside Landing Zone?) then (True)
                 :Block Hits;
-                detach
-            else (No)
-                if (Hit Delay Active?) then (Yes)
+                kill
+            else (False)
+                if (Hit Delay Active?) then (True)
                     :Wait for delay
                     until hit can
                     be counted again;
-                else (No)
-                    :if hits > Max Hits
-                    Create restart message
-                Else
-                    hits +1
-                    activate delay;
-                    :Pause Game;
-                    end
+                    kill
+                else (False)
+                    if (hits > Max Hits) then (True)
+                        :Create restart message;
+                        :Pause Game;
+                        end
+                    else (False)
+                        :hits +1
+                        activate delay;
+                        kill
+                    endif
                 endif
             endif
 
