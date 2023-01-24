@@ -83,9 +83,9 @@ repeat
     }
     
    
+    fork again
     partition Custom Events {
     
-    fork again
     :Wait for events;
         ' check modules
         fork
