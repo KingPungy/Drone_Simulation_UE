@@ -1,4 +1,4 @@
-@startuml
+@startuml Legenda
 title Legenda
 skinparam TitleFontName Calibri
 skinparam TitleFontSize 40
@@ -16,4 +16,5 @@ class Legend <<(L,#eb9234)>> {
     -LocalPrivateEvent/Method()
     +PublicMethod()
 }
+
 @enduml
