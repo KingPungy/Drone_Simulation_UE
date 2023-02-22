@@ -63,7 +63,7 @@ Program was developed and tested on 2 PC's with the following specs:
 ```
 git clone https://github.com/invoke-ai/InvokeAI.git
 ```
-4. 
+4. you open the project by either opening the Unreal engine via Epic games and then selecting the .uproject file by hand, OR , launch the project by double clicking the .uproject file in the repository folder.
 
 
 
