@@ -61,7 +61,7 @@ Program was developed and tested on 2 PC's with the following specs:
    - After the engine has finished installing. Find the 3 Plugins listed above in the [Marketplace](https://marketplace-website-node-launcher-prod.ol.epicgames.com/ue/marketplace/en-US/store) and install them into the Engine using the Epic Games Launcher.
 3. While waiting for Unreal Engine to install, clone this project repository to a drive on your PC using the following comand. A SSD is recommended for faster loading times for the editor and inside the application.
 ```
-git clone https://github.com/invoke-ai/InvokeAI.git
+git clone https://github.com/KingPungy/Drone_Simulation_UE.git
 ```
 4. you open the project by either opening the Unreal engine via Epic games and then selecting the .uproject file by hand, OR , launch the project by double clicking the .uproject file in the repository folder.
 
